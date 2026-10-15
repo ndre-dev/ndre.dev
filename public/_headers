@@ -5,8 +5,8 @@
   Content-Type: image/png
 /opengraph-image*
   Content-Type: image/png
-/pt-br/opengraph-image*
-  Content-Type: image/png
+# This also covers /pt-br/opengraph-image*. A separate rule for it would set
+# the type twice.
 /:tool/opengraph-image*
   Content-Type: image/png
 /pt-br/:tool/opengraph-image*
