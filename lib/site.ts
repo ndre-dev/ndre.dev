@@ -23,6 +23,7 @@ type Copy = {
   projectsLabel: string;
   toolsLabel: string;
   install: { copied: string; label: string };
+  repo: { before: string; after: string };
   theme: { toLight: string; toDark: string };
   switchTo: { label: string; short: string; lang: string; href: string };
 };
@@ -44,6 +45,7 @@ export const copy: Record<Locale, Copy> = {
       copied: 'copied',
       label: 'Copy the install command for',
     },
+    repo: { before: 'Source code for', after: 'on GitHub' },
     theme: { toLight: 'light', toDark: 'dark' },
     switchTo: {
       label: 'Português',
@@ -68,6 +70,7 @@ export const copy: Record<Locale, Copy> = {
       copied: 'copiado',
       label: 'Copiar o comando de instalação do',
     },
+    repo: { before: 'Código do', after: 'no GitHub' },
     theme: { toLight: 'claro', toDark: 'escuro' },
     switchTo: { label: 'English', short: 'en', lang: 'en', href: '/' },
   },

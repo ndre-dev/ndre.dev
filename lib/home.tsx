@@ -106,6 +106,42 @@ function Brew({
   );
 }
 
+// A small "repo" link after a tool, to its source on GitHub. It is a link, not
+// a button, so it stays on touch screens. The hidden language gets the shape
+// only, like Brew.
+function Repo({
+  href,
+  tool,
+  locale,
+  ghost,
+}: {
+  href: string;
+  tool: string;
+  locale: Locale;
+  ghost: boolean;
+}) {
+  const t = copy[locale].repo;
+
+  if (ghost)
+    return (
+      <span className="repo">
+        <Text ghost>repo</Text>
+      </span>
+    );
+
+  // The full name is for screen readers. It starts with the visible text, so
+  // voice control ("click repo") still finds the link.
+  return (
+    <a className="repo" href={href}>
+      repo
+      <span className="sr-only">
+        {' '}
+        {t.before} {tool} {t.after}
+      </span>
+    </a>
+  );
+}
+
 const localeOf = (path: string): Locale =>
   path.startsWith(copy.pt.path) ? 'pt' : 'en';
 
@@ -288,6 +324,12 @@ export function Home({ locale: initial }: { locale: Locale }) {
                             ghost={ghost}
                           />
                         )}
+                        <Repo
+                          href={tool.repo}
+                          tool={tool.name}
+                          locale={l}
+                          ghost={ghost}
+                        />
                       </li>
                     );
                   })}
