@@ -1,0 +1,762 @@
+/* Dark is the default. The toggle in the bar sets data-theme="light". */
+:root {
+  color-scheme: dark;
+  --bg: #0b1526;
+  --fg: #eef1f6;
+  --muted: #9aa6ba;
+  --line: #22304a;
+  --accent: #ff6f91;
+  --accent-ink: #0b1526;
+  /* Strength of the background glow and film grain. */
+  --glow: 9%;
+  --grain: 0.09;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f7f8fb;
+  --fg: #0b1526;
+  --muted: #56627a;
+  --line: #dde2ec;
+  --accent: #c8204f;
+  --accent-ink: #ffffff;
+  --glow: 6%;
+  --grain: 0.07;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Only on devices with a real pointer. On phones a tap would leave the
+   underline stuck on the link. */
+@media (hover: hover) and (pointer: fine) {
+  a:hover,
+  .theme-toggle:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Text for screen readers only. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* A soft pink glow behind the name. It stays put while the page scrolls. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70vmax 55vmax at 22% 18%,
+    color-mix(in srgb, var(--accent) var(--glow), transparent),
+    transparent 70%
+  );
+}
+
+/* Film grain over the whole page, on top of the glow. A still noise
+   texture, drawn once by the browser from the SVG below. It sits under the
+   page content. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 56px clamp(16px, 5vw, 72px) 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+/* The site name on the left, the language and theme switches on the right. */
+.bar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* The rule under the bar. A pseudo-element, so the intro can draw it in. */
+.bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--fg);
+  transform-origin: left;
+}
+
+.bar-links {
+  display: flex;
+  gap: 24px;
+}
+
+/* Contact links on the left, the location on the right. On narrow screens
+   the location moves under the links. */
+.foot {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 14px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* The rule above the footer, matching the one under the header. */
+.foot::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--fg);
+}
+
+.foot-links {
+  display: flex;
+  gap: 24px;
+}
+
+/* Keep the location at the right edge, also when it wraps under the links.
+   Its box fits the longer language, so the text aligns right inside it. */
+.foot > :last-child {
+  margin-left: auto;
+  text-align: right;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 24px 40px;
+}
+
+.name {
+  flex: 999 1 520px;
+  margin: 0;
+  /* Fills about 80% of the width on phones, tablets and the Duo unfolded,
+     up to the desktop size. */
+  font-size: clamp(80px, 22vw, 176px);
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+}
+
+.dot {
+  color: var(--accent);
+}
+
+.tagline {
+  flex: 1 1 200px;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 22px;
+  color: var(--muted);
+}
+
+.studio {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  border-top: 2px solid var(--fg);
+  border-bottom: 2px solid var(--fg);
+}
+
+.studio:hover {
+  text-decoration: none;
+}
+
+.studio-text,
+.studio-arrow {
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.studio-arrow {
+  display: flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-right: 4px;
+}
+
+.studio-text .muted {
+  transition: color 0.3s;
+}
+
+.studio-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  font-size: 17px;
+}
+
+/* The PNG carries the brand's clear space, so it needs no extra margin.
+   Transparent text hides the alt text that Firefox shows while the image
+   loads, so the logo never flashes as small text first. Screen readers still
+   read it. */
+.studio-logo {
+  display: block;
+  width: auto;
+  height: 44px;
+  color: transparent;
+}
+
+/* Show the logo file that matches the theme: white on dark, navy on light. */
+.studio-logo.on-light,
+:root[data-theme='light'] .studio-logo.on-dark {
+  display: none;
+}
+
+:root[data-theme='light'] .studio-logo.on-light {
+  display: block;
+}
+
+.theme-toggle {
+  /* Room for the longest label ("escuro"), so the links never move. */
+  min-width: 6ch;
+  text-align: left;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* Name the theme the button switches to. */
+:root[data-theme='light'] .theme-toggle .to-light,
+:root:not([data-theme='light']) .theme-toggle .to-dark {
+  display: none;
+}
+
+.projects {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 19px;
+}
+
+.project {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.project:last-child {
+  border-bottom: 0;
+}
+
+.entry {
+  display: inline-block;
+}
+
+/* Small open-source tools: a quieter list under the projects. It sits
+   closer to the projects than the page's usual gap. */
+.tools {
+  margin-top: -24px;
+}
+
+.tools-label {
+  margin: 0 0 12px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.tools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+}
+
+/* "brew" after a tool copies its install command. It sits past the hover
+   arrow, stays quiet until pointed at, and is hidden on touch screens, where
+   a Homebrew command is no use. */
+.brew {
+  margin-left: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.7;
+  cursor: pointer;
+  transition:
+    color 0.3s,
+    opacity 0.3s;
+}
+
+.brew > span {
+  display: inline-grid;
+}
+
+.brew > span > * {
+  grid-area: 1 / 1;
+}
+
+.brew:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brew:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .brew {
+    display: none;
+  }
+}
+
+/* Tool pages (see lib/tool-page.tsx). The tool name is longer than "andre",
+   so it is drawn smaller, with its note on the line under it. Text keeps a
+   readable line length. */
+.name-tool {
+  flex-basis: 100%;
+  font-size: clamp(64px, 16vw, 144px);
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  max-width: 640px;
+}
+
+.tool-about {
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.tool-about p {
+  margin: 0;
+}
+
+.tool-about p + p {
+  margin-top: 16px;
+}
+
+.tool-shot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.tool-part {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.tool-part p {
+  margin: 0;
+}
+
+.tool-part > * + * {
+  margin-top: 12px;
+}
+
+.tool-part .tools-label + * {
+  margin-top: 0;
+}
+
+.tool-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* The install command in a box, with its copy button on the right. */
+.command {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+}
+
+.command-text {
+  font: inherit;
+  overflow-wrap: anywhere;
+}
+
+/* Drawn with CSS so a hand-made selection never includes it. */
+.command-text::before {
+  content: '$ ';
+  color: var(--muted);
+}
+
+.command-copy {
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.command-copy > span {
+  display: inline-grid;
+}
+
+.command-copy > span > * {
+  grid-area: 1 / 1;
+}
+
+.command-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .command-copy:hover {
+    color: var(--accent);
+  }
+}
+
+/* Project links draw their own underline and show an arrow on hover. */
+.entry:hover {
+  text-decoration: none;
+}
+
+/* Both languages sit in the same grid cell; only the current one shows (see
+   Both in lib/home.tsx). The cell fits the longer one, so nothing moves when
+   the language changes. */
+.both {
+  display: inline-grid;
+}
+
+.both > * {
+  grid-area: 1 / 1;
+}
+
+.both-block {
+  display: grid;
+}
+
+.both-hidden {
+  visibility: hidden;
+}
+
+/* The hidden language's text, drawn from a data attribute. It lays out like
+   normal text but is not part of the HTML text that bots and Reader view read. */
+.ghost::before {
+  content: attr(data-text);
+}
+
+.entry-name {
+  background: linear-gradient(var(--accent), var(--accent)) left bottom / 0 1px
+    no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Drawn with CSS so copied text never includes it. */
+.entry-arrow::before {
+  content: '\2197';
+}
+
+/* No width or margin of its own, so a hidden arrow never wraps onto an empty
+   line after a long note. A relative offset draws it just past the text. */
+.entry-arrow {
+  display: inline-block;
+  position: relative;
+  left: 6px;
+  width: 0;
+  white-space: nowrap;
+  color: var(--accent);
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 0.3s,
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.entry .muted {
+  transition: color 0.3s;
+}
+
+/* Hover effects for mouse users. Keyboard focus gets the same look. */
+@media (hover: hover) and (pointer: fine) {
+  .studio:hover .studio-text {
+    transform: translateX(12px);
+  }
+
+  .studio:hover .studio-text .muted {
+    color: var(--fg);
+  }
+
+  .studio:hover .studio-arrow svg {
+    color: var(--accent);
+    animation: arrow-through 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .entry:hover .entry-name {
+    background-size: 100% 1px;
+  }
+
+  .entry:hover .entry-arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .entry:hover .muted {
+    color: var(--fg);
+  }
+}
+
+.studio:focus-visible .studio-text {
+  transform: translateX(12px);
+}
+
+.entry:focus-visible .entry-name {
+  background-size: 100% 1px;
+}
+
+.entry:focus-visible .entry-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+/* The arrow leaves at the top right and comes back from the bottom left. */
+@keyframes arrow-through {
+  45% {
+    transform: translate(120%, -120%);
+  }
+  46% {
+    transform: translate(-120%, 120%);
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    gap: 48px;
+    padding-top: 32px;
+  }
+
+  .projects {
+    font-size: 17px;
+  }
+}
+
+/* Intro. Plays once per visit (see lib/theme.ts) and is over in under a
+   second: short fades with small movements. With fill-mode backwards, each
+   element returns to its normal style when its animation ends. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-intro='done']) .bar > * {
+    animation: fade 0.4s backwards;
+  }
+
+  :root:not([data-intro='done']) .bar::after {
+    animation: draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  }
+
+  :root:not([data-intro='done']) .name {
+    animation: fade 0.6s backwards;
+  }
+
+  :root:not([data-intro='done']) .tagline {
+    animation: fade 0.4s 0.25s backwards;
+  }
+
+  :root:not([data-intro='done']) .studio {
+    animation: fade-up 0.5s 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  :root:not([data-intro='done']) .tools {
+    animation: fade-up 0.5s 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  :root:not([data-intro='done']) .tool {
+    animation: fade-up 0.5s 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  :root:not([data-intro='done']) .foot {
+    animation: fade-up 0.5s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  :root:not([data-intro='done']) .project {
+    animation: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    animation-delay: calc(0.35s + var(--i) * 50ms);
+  }
+}
+
+/* Theme switch: replace the default cross-fade with a circular reveal. */
+:root.theme-switching::view-transition-group(root) {
+  animation-duration: 0.9s;
+}
+
+:root.theme-switching::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The new theme grows in a circle from the toggle. The toggle sets the
+   centre, the final radius and the timing curve. */
+:root.theme-switching::view-transition-new(root) {
+  animation: theme-reveal 0.9s var(--reveal-ease, ease-in-out) both;
+  mix-blend-mode: normal;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--reveal-x) var(--reveal-y));
+  }
+  to {
+    clip-path: circle(var(--reveal-r) at var(--reveal-x) var(--reveal-y));
+  }
+}
+
+/* Keep everything inside the circle during a theme switch: the named parts
+   of the language switch join the page snapshot, and colour transitions
+   wait. */
+:root.theme-switching * {
+  view-transition-name: none !important;
+}
+
+:root.theme-switching *,
+:root.theme-switching ::before,
+:root.theme-switching ::after {
+  transition: none !important;
+}
+
+/* Language switch (see lib/home.tsx). Each named part glides to its new
+   place and size while its text cross-fades. The text keeps its own size
+   instead of stretching with the part. */
+:root.lang-switching::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root.lang-switching::view-transition-old(*),
+:root.lang-switching::view-transition-new(*) {
+  width: auto;
+  height: auto;
+  animation-duration: 0.35s;
+}
+
+/* Opening the other language's page directly: cross-fade, name stays. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  .name {
+    view-transition-name: name;
+  }
+}
+
+/* Reduced motion: no movement. Hover still changes colour. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

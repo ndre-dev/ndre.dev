@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ndre-dev",
+  // Andre's personal Cloudflare account.
+  "account_id": "138cff0728ac606cf8bc77aebfff84f1",
+  "compatibility_date": "2026-10-01",
+  "routes": [
+    { "pattern": "ndre.dev", "custom_domain": true },
+    { "pattern": "www.ndre.dev", "custom_domain": true },
+  ],
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page",
+  },
+}
