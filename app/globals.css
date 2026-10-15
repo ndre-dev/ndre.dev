@@ -343,10 +343,11 @@ body::after {
   font-size: 15px;
 }
 
-/* "brew" after a tool copies its install command. It sits past the hover
-   arrow, stays quiet until pointed at, and is hidden on touch screens, where
-   a Homebrew command is no use. */
-.brew {
+/* "brew" after a tool copies its install command. "repo" links to its source.
+   Both sit past the hover arrow and stay quiet until pointed at. Only "brew"
+   is hidden on touch screens, where a Homebrew command is no use. */
+.brew,
+.repo {
   margin-left: 22px;
   padding: 0;
   border: 0;
@@ -369,22 +370,40 @@ body::after {
   grid-area: 1 / 1;
 }
 
-.brew:focus-visible {
+.brew:focus-visible,
+.repo:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   opacity: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .brew:hover {
+  .brew:hover,
+  .repo:hover {
     color: var(--accent);
     opacity: 1;
   }
 }
 
+/* "repo" is a link, so cancel the global link underline on hover. Colour is
+   the only hover cue, as with "brew". */
+.repo:hover {
+  text-decoration: none;
+}
+
+/* After "brew", "repo" only needs a small gap. */
+.brew ~ .repo {
+  margin-left: 12px;
+}
+
 @media (hover: none) {
   .brew {
     display: none;
+  }
+
+  /* With "brew" gone, "repo" is first and clears the arrow again. */
+  .brew ~ .repo {
+    margin-left: 22px;
   }
 }
 
