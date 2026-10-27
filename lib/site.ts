@@ -79,8 +79,7 @@ export const copy: Record<Locale, Copy> = {
 type Link = { label: string; short: string; href: string };
 
 // LinkedIn shows once its URL is set. X can join later.
-const linkedin =
-  'https://www.linkedin.com/in/andre-cammarano-guglielmi-1251ab162';
+const linkedin = 'https://www.linkedin.com/in/andreguglielmi';
 
 // Shown in the footer, in this order.
 export const links: Link[] = [
