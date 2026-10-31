@@ -23,6 +23,6 @@
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
     "typescript": "^5.9.3",
-    "wrangler": "^4.151.0"
+    "wrangler": "^4.156.0"
   }
 }
