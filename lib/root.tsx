@@ -53,14 +53,16 @@ export function StructuredData({ locale }: { locale: Locale }) {
     name: site.name,
     url: `${site.url}${t.path === '/' ? '' : t.path}`,
     description: t.description,
-    jobTitle: locale === 'en' ? 'Developer' : 'Dev',
+    jobTitle:
+      locale === 'en' ? 'Shopify technical lead' : 'Líder técnico de Shopify',
     homeLocation: { '@type': 'Place', name: 'Manchester, UK' },
     knowsLanguage: ['en', 'pt-BR'],
     email: 'mailto:a@ndre.dev',
     sameAs: links
       .filter((link) => link.href.startsWith('https://'))
       .map((link) => link.href),
-    founder: { '@type': 'Organization', name: studio.name, url: studio.href },
+    // Person has no `founder` property. Dobrigado is where Andre works.
+    worksFor: { '@type': 'Organization', name: studio.name, url: studio.href },
   };
   // Escape "<" so the JSON can never close the script tag early.
   const json = JSON.stringify(person).replace(/</g, '\\u003c');

@@ -87,6 +87,12 @@ export const links: Link[] = [
   { label: 'a@ndre.dev', short: 'email', href: 'mailto:a@ndre.dev' },
   { label: 'GitHub', short: 'gh', href: 'https://github.com/ndre-dev' },
   { label: 'LinkedIn', short: 'in', href: linkedin },
+  // Andre's Shopify work history, on the studio site.
+  {
+    label: 'Work history',
+    short: 'work',
+    href: 'https://www.dobrigado.com/andre',
+  },
 ].filter((link) => link.href);
 
 export const studio = {
